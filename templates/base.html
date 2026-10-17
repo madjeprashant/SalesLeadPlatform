@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{% block title %}Northstar · Sales OS{% endblock %}</title><link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}"><script>window.CSRF_TOKEN={{ csrf_token()|tojson }};</script><script defer src="{{ url_for('static',filename='app.js') }}"></script><style>
+.sidebar nav{flex:1;min-height:0;overflow-y:auto}
+.account-nav{flex:0 0 auto}
+.account-nav .nav-link{margin-top:3px}
+.sidebar-bottom{flex:0 0 auto}
+.logout-form{margin-left:auto;flex:0 0 auto}
+.logout-button{display:flex;align-items:center;justify-content:center;gap:7px;min-width:78px;height:34px;padding:0 10px;border:1px solid rgba(174,187,208,.18);border-radius:8px;background:rgba(255,255,255,.04);color:#aebbd0;font:600 10px/1 inherit;cursor:pointer}
+.logout-button:hover{background:#21324c;color:#fff;border-color:rgba(255,255,255,.16)}
+.logout-icon{font-size:14px;line-height:1}
+.logout-text{white-space:nowrap}
+@media(max-width:720px){.logout-button{min-width:34px;width:34px;padding:0}.logout-text{display:none}}
+</style></head>
+<body><aside class="sidebar"><a class="brand" href="/"><span class="brand-icon">N</span><span>northstar<small>REVENUE PLATFORM</small></span></a><div class="workspace-label">WORKSPACE</div><nav>
+<a class="nav-link {{ 'active' if page=='dashboard' else '' }}" href="/"><span>⌂</span> Overview</a><a class="nav-link {{ 'active' if page=='leads' else '' }}" href="/leads"><span>◎</span> Leads <b class="nav-count">{{ g.db.execute('SELECT COUNT(*) FROM leads').fetchone()[0] }}</b></a><a class="nav-link {{ 'active' if page=='opportunities' else '' }}" href="/opportunities"><span>◇</span> Opportunities</a><a class="nav-link {{ 'active' if page=='activities' else '' }}" href="/activities"><span>◷</span> Follow-ups</a>
+<div class="workspace-label section-label">MANAGE</div>{% if g.user.role=='admin' %}<a class="nav-link {{ 'active' if page=='team' else '' }}" href="/team"><span>♙</span> Sales team</a><a class="nav-link {{ 'active' if page=='catalog' else '' }}" href="/catalog"><span>▦</span> Products & territories</a>{% endif %}{% if g.user.role in ['admin','manager'] %}<a class="nav-link {{ 'active' if page=='reports' else '' }}" href="/reports"><span>▥</span> Analytics</a><a class="nav-link {{ 'active' if page=='audit' else '' }}" href="/audit"><span>◴</span> Audit history</a>{% endif %}{% if g.user.role=='admin' %}<a class="nav-link {{ 'active' if page=='users' else '' }}" href="/users"><span>♧</span> Users & access</a>{% endif %}</nav>
+<div class="account-nav"><a class="nav-link {{ 'active' if page=='account' else '' }}" href="/account/password"><span>⚿</span> My account</a></div>
+<div class="sidebar-bottom"><div class="avatar">{{ g.user.name[:1]|upper }}</div><div class="account-name"><strong>{{ g.user.name }}</strong><small>{{ g.user.role|title }}</small></div><form class="logout-form" method="post" action="{{ url_for('logout') }}"><input type="hidden" name="_csrf" value="{{ csrf_token() }}"><button class="logout-button" type="submit" title="Sign out"><span class="logout-icon">↪</span><span class="logout-text">Sign out</span></button></form></div></aside>
+<main class="main"><header class="topbar"><div class="crumb">Revenue workspace <span>/</span> <strong>{% block crumb %}Overview{% endblock %}</strong></div><div class="top-actions"><span class="today">{{ today }}</span><span class="top-avatar">SC</span></div></header>
+<section class="content">{% with messages=get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-wrap">{% for category,message in messages %}<div class="flash {{ category }}">{{ message }}<button onclick="this.parentElement.remove()">×</button></div>{% endfor %}</div>{% endif %}{% endwith %}{% block content %}{% endblock %}</section><footer>Northstar Revenue Platform <span>•</span> Lead distribution intelligence</footer></main>
+<div class="modal-backdrop" id="modal" onclick="if(event.target===this)closeModal()"><div class="modal"><button class="modal-close" onclick="closeModal()">×</button><div id="modal-content"></div></div></div></body></html>

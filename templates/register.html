@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create account · Northstar Revenue Platform</title>
+  <style>
+    :root{--ink:#17243a;--muted:#748097;--paper:#f6f8fb;--navy:#12223a;--blue:#3978ed;--teal:#48c7ad}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:var(--paper);color:var(--ink);font:14px/1.5 Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:grid;place-items:center;padding:24px}
+    .box{width:min(480px,100%);background:#fff;border:1px solid #e9edf3;border-radius:16px;box-shadow:0 12px 35px rgba(18,34,58,.08);padding:30px}
+    .brand{display:flex;align-items:center;gap:11px;margin-bottom:22px}.icon{width:38px;height:38px;border-radius:12px;background:linear-gradient(140deg,#56d6bd,#3f8cf2);display:grid;place-items:center;color:#0f2340;font-weight:850;font-size:20px}.name{font-size:19px;font-weight:750}.name small{display:block;color:#8290a6;font-size:8px;letter-spacing:1.5px}
+    h1{font-size:25px;letter-spacing:-.6px;margin:0 0 5px}.sub{color:#8792a4;font-size:12px;margin:0 0 20px}
+    label{display:block;font-size:11px;font-weight:650;color:#5e6a7e;margin:12px 0 6px}input{width:100%;border:1px solid #e4e9f0;border-radius:7px;padding:10px 11px;font:13px inherit;color:#34435a;outline:none}input:focus{border-color:#8bb0fa;box-shadow:0 0 0 3px rgba(57,120,237,.08)}
+    .hint{font-size:9px;color:#9aa4b3;margin-top:5px}.button{width:100%;border:0;border-radius:8px;padding:11px 14px;background:var(--blue);color:#fff;font:600 12px inherit;cursor:pointer;margin-top:18px}.button:hover{background:#2865d3}
+    .back{text-align:center;margin:17px 0 0;font-size:11px;color:#8792a4}.back a{color:var(--blue);font-weight:650;text-decoration:none}
+    .flash{padding:10px 12px;border-radius:7px;font-size:11px;margin-bottom:12px}.flash.error{background:#fff0ed;color:#bb5b52}.flash.success{background:#e7f7f0;color:#287f65}
+    .role-note{margin-top:17px;padding:12px;border-radius:8px;background:#f1f5fb;color:#69788f;font-size:10px}
+  </style>
+</head>
+<body>
+  <main class="box">
+    <div class="brand"><span class="icon">N</span><span class="name">northstar<small>REVENUE PLATFORM</small></span></div>
+    <h1>Create your account</h1>
+    <p class="sub">Create a sales-user account and start using the workspace.</p>
+
+    {% with messages=get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="post">
+      <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+
+      <label for="name">Full name</label>
+      <input id="name" name="name" maxlength="100" autocomplete="name" required>
+
+      <label for="username">Username</label>
+      <input id="username" name="username" minlength="3" maxlength="50" pattern="[A-Za-z0-9_.-]{3,50}" autocomplete="username" required>
+      <div class="hint">3–50 characters: letters, numbers, dots, underscores or hyphens.</div>
+
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" minlength="12" autocomplete="new-password" required>
+      <div class="hint">Minimum 12 characters.</div>
+
+      <label for="confirm_password">Confirm password</label>
+      <input id="confirm_password" name="confirm_password" type="password" minlength="12" autocomplete="new-password" required>
+
+      <button class="button" type="submit">Create account</button>
+    </form>
+
+    <div class="role-note"><strong>Account type:</strong> New public registrations are automatically created as active <strong>SALES</strong> users. Admin and Manager roles remain controlled by administrators.</div>
+    <p class="back">Already have an account? <a href="{{ url_for('login') }}">Sign in</a></p>
+  </main>
+</body>
+</html>
